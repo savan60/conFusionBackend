@@ -8,6 +8,8 @@ var FileStore=require('session-file-store')(session);
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var dishRouter = require('./routes/dishRouter');
+var uploadRouter = require('./routes/uploadRouter');
+
 var PromoRouter = require('./routes/promoRouter');
 var LeaderRouter = require('./routes/leaderRouter');
 var authenticate=require('./authenticate');
@@ -16,8 +18,17 @@ const mongoose = require('mongoose');
 const config=require('./config');
 const url=config.mongoUrl;
 const Dishes = require('./models/dishes');
-const connect = mongoose.connect(url); var app = express();
+const connect = mongoose.connect(url); 
 
+var app = express();
+app.all('*',(req,res,next)=>{
+  if(req.secure){
+    return next();
+  }
+  else{
+    res.redirect(307,'https://'+req.hostname+':'+app.get('secPort')+req.url);
+  }
+});
 connect.then((db) => {
   console.log("Connected correctly to server");
 
@@ -42,6 +53,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/dishes', dishRouter);
 app.use('/leaders', LeaderRouter);
 app.use('/promotions', PromoRouter);
+app.use('/imageUpload', uploadRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
