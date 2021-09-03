@@ -12,11 +12,14 @@ var uploadRouter = require('./routes/uploadRouter');
 var favoriteRouter = require('./routes/favoritesRouter');
 
 var PromoRouter = require('./routes/promoRouter');
+var commrntRouter = require('./routes/commenRouter');
+
 var LeaderRouter = require('./routes/leaderRouter');
 var authenticate=require('./authenticate');
 var passport=require('passport');
 const mongoose = require('mongoose');
 const config=require('./config');
+const commentRouter = require('./routes/commenRouter');
 const url=config.mongoUrl;
 const connect = mongoose.connect(url); 
 
@@ -55,6 +58,8 @@ app.use('/leaders', LeaderRouter);
 app.use('/favorites', favoriteRouter);
 app.use('/promotions', PromoRouter);
 app.use('/imageUpload', uploadRouter);
+app.use('/comments', commentRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
